@@ -52,9 +52,11 @@ function draw() {
 
   squares.forEach( (el) => {
     el.write()
-  //  console.log(el.index())
   })
 
+  possible_fields.forEach( (el) => {
+    squares[two_one(el[0], el[1])].highlight()
+  })
 
   //image(img, x, y)
   //image(img, p, q)
@@ -79,14 +81,14 @@ function allPossibleMoves(pos) {
   // all possible moves of the knight
   const X = [2, 1, -1, -2, -2, -1, 1, 2]
   const Y = [1, 2, 2, 1, -1, -2, -2, -1]
-  var possible_fields = []
+
   for (let j = 0; j < 8; j++) {
     // console.log("p + X[j]:" +  " " + p + " " + X[j])
     // testing all moves:
     var x = p + X[j]
     var y = q + Y[j]
 
-    if (x >= 0 && y >= 0 && y < 8 && y < 8) {
+    if (x >= 0 && y >= 0 && x < 8 && y < 8) {
       // here check if visited
 
       let arr = []
@@ -95,14 +97,15 @@ function allPossibleMoves(pos) {
       possible_fields.push(arr)
     }
   }
+
   // we were here
-//console.log(p + " " + q + " can move to ")
-//console.log(possible_fields)
+console.log(p + " " + q + " can move to " + " " + possible_fields)
+console.log(possible_fields)
 
 
 
 }
-
+  var possible_fields = []
 
 function square_with_fewest_onward_moves() {
   let arr = [] //array to return
