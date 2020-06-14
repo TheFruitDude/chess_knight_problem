@@ -10,12 +10,15 @@ function knight() {
     //keeps track of itself
     this.x = _x;
     this.y = _x
+    image(img, this.x, this.y)
   }
 }
 
 function preload() {
   img = loadImage('ross_neu.png')
 }
+
+var aktuelle_position = 33
 
 function setup() {
 
@@ -26,70 +29,67 @@ function setup() {
   for (y = 0; y < height; y += 50) {
     for (x = 0; x < width; x += 50) {
       square = new Square(x, y, index);
+      square.setvariables() // initialize the coordinates
       squares.push(square);
-    index++;
+      index++;
     }
   }
 
-  //console.log(getCoordinates(squares[25]))
-  var p = Math.floor(random(0, 63))
-  let pos1 = squares[p].x
-  let pos2 = squares[p].y
+  //testing:
 
-  allPossibleMoves([pos1, pos2])
+  var testing = allPossibleMoves([5, 1])
+console.log(testing)
+}
+
+function square_with_fewest_onward_moves(inp) {
+  // input is like this: [[3,1], [0,1], [2,1]]
+  let arr = [] //array to return
+  let total;
+  inp.forEach((element) => {
+    // for each element, test all possible moves
+    //  console.log(element)
+    total += allPossibleMoves(element).length // 0 or 1
+  })
+
+  // optimal scenario: check for all possibilites iterating in each of the possible_fields
+
 
 }
 
-
-let count = 0
-
 function draw() {
-  var p = Math.floor(random(0, 63))
-
   drawBoard();
-  let x = squares[p].x
-  let y = squares[p].y
 
-  squares.forEach( (el) => {
+
+  squares.forEach((el) => {
     el.write()
   })
 
-  possible_fields.forEach( (el) => {
-    squares[two_one(el[0], el[1])].highlight()
-  })
 
-  //image(img, x, y)
-  //image(img, p, q)
 }
 
-
-
+// input is this format: [x, y]
 function allPossibleMoves(pos) {
 
   // check all available moves from a given position
-  // input is this format: [x, y]
-  // input needs to be mapped first
 
-  // this function returns an array containing all possible coordinates where the knight can moves
+  var p = pos[0]
+  var q = pos[1]
 
-
-  //console.log(pos[0] + " " + pos[1] + "  translates to " + map_to_8(pos))
-  var a = map_to_8(pos) // 0 to 7
-  var p = a[0]
-  var q = a[1]
-
+  var possible_fields = []
   // all possible moves of the knight
   const X = [2, 1, -1, -2, -2, -1, 1, 2]
   const Y = [1, 2, 2, 1, -1, -2, -2, -1]
 
   for (let j = 0; j < 8; j++) {
-    // console.log("p + X[j]:" +  " " + p + " " + X[j])
     // testing all moves:
     var x = p + X[j]
     var y = q + Y[j]
 
     if (x >= 0 && y >= 0 && x < 8 && y < 8) {
-      // here check if visited
+      // if knight already visited, don't count that particular field
+
+      // check here with x and y
+      // this is not finished
 
       let arr = []
       arr.push(x)
@@ -97,21 +97,18 @@ function allPossibleMoves(pos) {
       possible_fields.push(arr)
     }
   }
-
-  // we were here
-console.log(p + " " + q + " can move to " + " " + possible_fields)
-console.log(possible_fields)
-
-
-
+  return possible_fields
 }
-  var possible_fields = []
 
-function square_with_fewest_onward_moves() {
-  let arr = [] //array to return
+function already_visited(arr) {
+  // squares is a global array of objects containing the boolean attribute 'visited'
+  // convert to 1-dimensional format
 
 }
 
+
+
+// returns an array
 function one_two(i) {
 
   let x = i % 8
@@ -123,14 +120,16 @@ function one_two(i) {
   return arr
 }
 
+// returns a zero based number
 function two_one(posX, posY) {
-  //translates Array grid from 2d to 1d and returns zero based 1 dim
+  // translates Array grid from 2d to 1d
+
   posX++ // add one because zero-based index
   posY++
   return ((posY - 1) * 8 + (posX)) - 1
 
 }
-// translates from coordinates to 0-7
+// translates from coordinates to 0-7 (returns array)
 function map_to_8(pos) {
 
   x = map(pos[0], 0, 350, 0, 7)

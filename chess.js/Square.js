@@ -3,6 +3,7 @@ function Square(_x, _y, _i) {
   this.y = _y;
   this.i = _i;
 
+// q and p are simply x and y, but mapped from range 0 to 9
   this.p; // for example [0, 1]
   this.q;
 
@@ -18,14 +19,29 @@ function Square(_x, _y, _i) {
   }
   this.index = function() {
     // it's position (index)
+    // not necessary, could just use arr.indexOf(el)
     return this.i
   }
+this.setvariables = function() {
+  function one_two(i) {
 
+    let x = i % 8
+
+    let y = Math.floor(i / 8)
+
+    let arr = []
+    arr.push(x, y)
+    return arr
+  }
+  let arr = []
+  arr = one_two(this.i)
+  this.p = arr[0]
+  this.q = arr[1]
+
+}
   this.write = function() {
     // simply writes the cell number in his field
-    let a = map_to_8([this.x, this.y])
-    this.p = a[0]
-    this.q = a[1]
+
 
     textSize(16)
     fill('red')
