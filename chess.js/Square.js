@@ -10,8 +10,9 @@ function Square(_x, _y, _i) {
   this.visited = false;
 
   this.highlight = function() {
+
     push();
-    strokeWeight(2);
+    strokeWeight(5);
     stroke(255, 255, 0);
     noFill();
     rect(this.x, this.y, 50, 50);

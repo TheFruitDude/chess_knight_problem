@@ -1,4 +1,4 @@
-p5.disableFriendlyErrors = true; // disables FES
+p5.disableFriendlyErrors = true; // disables FES, could imrove performance
 var squares = [];
 var visited = []
 var img;
@@ -43,9 +43,12 @@ function setup() {
 }
 
 function square_with_fewest_onward_moves(inp) {
-  function sort_array( (a,b) => {
+
+if (inp.length == 0) console.log("allPossibleMoves returned empty array" + " " +  "last point xpos ypos = " + xpos + " " + ypos)
+
+  function sort_array(a, b) {
     return b.length - a.length;
-  })
+  }
 
 
   // input is like this: [[3,1], [0,1], [2,1]]
@@ -63,6 +66,8 @@ function square_with_fewest_onward_moves(inp) {
     // Index 0 and 1 represent the field. all the other elements in the array (array of arrays) are the connections from that field
   })
   // now we have saved all possible moves in arr
+  // arr[0] and arr[1] are the actual coordintes we are testing
+  // all other elements are the moves to consider, as sub arrays
   var shortest = arr[0]
   arr.forEach((el) => {
     if (arr.indexOf(el) !== 0 && arr.indexOf(el) !== 1) {
@@ -79,44 +84,44 @@ function square_with_fewest_onward_moves(inp) {
 
 // initial start for the knight (could be anywhere)
 var xpos = 4
-var ypos = 4
-
-var posArr = []
-var rand = [4, 6]
-var rand2 = [3, 4]
-var step = 10
+var ypos = 3
+var step = 63
+var zurückgelegter_weg = []
 
 function draw() {
+  let zarr = []
+  zarr.push(xpos)
+  zarr.push(ypos)
+
+
+
+
+  zurückgelegter_weg.push(zarr)
+
   drawBoard();
 
+  if (step >= 0) {
 
-  if (step > 0) {
     var next = square_with_fewest_onward_moves(allPossibleMoves([xpos, ypos]))
-    stroke(255)
-    // implement a rule for next, so that each square can only be visited once.
 
-    // if square_with_fewest_onward_moves() returns a square which has already been visited,
-    // it should return a different square
-    line(xpos, ypos, next[0], next[1])
+    draw_line(zurückgelegter_weg)  // funktioniert noch nicht gut
     xpos = next[0]
     ypos = next[1]
 
-    console.log(xpos, ypos)
 
     squares[two_one(xpos, ypos)].visited = true
-    //knight.move(xpos, ypos)
-
-
-  //  console.log("From xpos, ypos " + xpos + "  " + ypos + " " )
-  //  console.log(next)
+    squares[two_one(xpos, ypos)].highlight()
   }
 
-knight.move(xpos, ypos)
+  knight.move(xpos, ypos)
+
   squares.forEach((el) => {
     el.write()
   })
 
   step = step - 1;
+  console.log(zurückgelegter_weg)
+  console.log("length = " + zurückgelegter_weg.length)
 }
 
 // input is this format: [x, y]
@@ -131,6 +136,7 @@ function allPossibleMoves(pos) {
   // all possible moves of the knight
   const X = [2, 1, -1, -2, -2, -1, 1, 2]
   const Y = [1, 2, 2, 1, -1, -2, -2, -1]
+  //  console.log("searching for all possible moves in " + pos[0] + " | " + pos[1])
 
   for (let j = 0; j < 8; j++) {
     // testing all moves:
@@ -140,18 +146,13 @@ function allPossibleMoves(pos) {
     if (x >= 0 && y >= 0 && x < 8 && y < 8) {
       // if knight already visited, don't count that particular field
       let isvisited = false
-      squares.forEach((el) => {
-        if (el.p == x && el.q == y) {
-          //  console.log(el.p + " " + el.q + " " + el.i)
-          if (el.visited == true) {
-            isvisited == true
-          } else {
-            isvisited == false
-          }
-        }
-      })
-      // check here with x and y
-      // this is not finished
+      if (squares[two_one(x, y)].visited == true) {
+        //  console.log("found " + x + " | " + y + " " + "for " + pos[0] + " | " + pos[1] + " but already visited that")
+        isvisited = true
+      } else {
+        isvisited = false
+      }
+
       if (isvisited == false) {
         let arr = []
         arr.push(x)
@@ -161,16 +162,27 @@ function allPossibleMoves(pos) {
 
     }
   }
+
   return possible_fields
 }
 
-function already_visited(arr) {
-  // squares is a global array of objects containing the boolean attribute 'visited'
-  // convert to 1-dimensional format
+
+function draw_line(inp) {
+  // inp is like this: [[3,5], [5,3], [1,3]]
+  let x1, x2, y1, y2
+  for (let i = 0; i < inp.length - 1; i++) {
+    x1 = map(inp[i][0], 0, 7, 0, 350)
+    y1 = map(inp[i][1], 0, 7, 0, 350)
+
+    x2 = map(inp[i + 1][0], 0, 7, 0, 350)
+    y2 = map(inp[i + 1][1], 0, 7, 0, 350)
+
+  }
+
+  //stroke(255, 0,0)
+  line(x1, y1, x2, y2)
 
 }
-
-
 
 // returns an array
 function one_two(i) {
