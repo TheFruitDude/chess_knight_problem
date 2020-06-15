@@ -37,23 +37,37 @@ function setup() {
 
   //testing:
 
-  var testing = allPossibleMoves([5, 1])
-console.log(testing)
+  var testing = allPossibleMoves([2, 5])
+  var all = square_with_fewest_onward_moves(testing)
+  //console.log(all)
 }
 
 function square_with_fewest_onward_moves(inp) {
   // input is like this: [[3,1], [0,1], [2,1]]
-  let arr = [] //array to return
-  let total;
+  var arr = []
+
   inp.forEach((element) => {
-    // for each element, test all possible moves
-    //  console.log(element)
-    total += allPossibleMoves(element).length // 0 or 1
+    // for each of the available fields, test all possible moves in each of those fields
+
+    var b = allPossibleMoves(element)
+    var a = []
+    a = [...element, ...b]
+    arr.push(a)
+    // push into a readable structure:
+    // it's crucial to understand the structure.  (console.log(arr))
+    // Index 0 and 1 represent the field. all the other elements in the array (array of arrays) are the connections from that field
   })
-
-  // optimal scenario: check for all possibilites iterating in each of the possible_fields
-
-
+  // now we have saved all possible moves in arr
+  var shortest = arr[0]
+  arr.forEach((el) => {
+    if (arr.indexOf(el) !== 0 && arr.indexOf(el) !== 1) {
+      if (el.length < shortest.length) {
+        shortest = el
+      }
+    }
+  })
+  // return the square with the fewest onward  moves
+  return shortest
 }
 
 function draw() {
@@ -87,7 +101,15 @@ function allPossibleMoves(pos) {
 
     if (x >= 0 && y >= 0 && x < 8 && y < 8) {
       // if knight already visited, don't count that particular field
-
+      let index = -1
+      squares.forEach((el) => {
+        if (el.p == x && el.q == y) {
+        //  console.log(el.p + " " + el.q + " " + el.i)
+        if (el.visited == false) {
+          index = el.i
+        }
+        }
+      })
       // check here with x and y
       // this is not finished
 
@@ -119,7 +141,6 @@ function one_two(i) {
   arr.push(x, y)
   return arr
 }
-
 // returns a zero based number
 function two_one(posX, posY) {
   // translates Array grid from 2d to 1d

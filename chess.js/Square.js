@@ -41,8 +41,6 @@ this.setvariables = function() {
 }
   this.write = function() {
     // simply writes the cell number in his field
-
-
     textSize(16)
     fill('red')
     var s = this.x + '\n' + this.y
