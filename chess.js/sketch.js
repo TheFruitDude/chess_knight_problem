@@ -1,15 +1,18 @@
+p5.disableFriendlyErrors = true; // disables FES
 var squares = [];
 var visited = []
 var img;
+var knight;
 
-function knight() {
+function Knight() {
   this.x;
   this.y;
-
+  frameRate(15)
   this.move = function(_x, _y) {
+
     //keeps track of itself
-    this.x = _x;
-    this.y = _x
+    this.x = map(_x, 0, 7, 0, 350)
+    this.y = map(_y, 0, 7, 0, 350)
     image(img, this.x, this.y)
   }
 }
@@ -18,7 +21,6 @@ function preload() {
   img = loadImage('ross_neu.png')
 }
 
-var aktuelle_position = 33
 
 function setup() {
 
@@ -34,15 +36,18 @@ function setup() {
       index++;
     }
   }
-
-  //testing:
-
-  var testing = allPossibleMoves([2, 5])
-  var all = square_with_fewest_onward_moves(testing)
-  //console.log(all)
+  knight = new Knight()
+  // var testing = allPossibleMoves([2, 5])
+  // var all = square_with_fewest_onward_moves(testing)
+  // console.log(all)
 }
 
 function square_with_fewest_onward_moves(inp) {
+  function sort_array( (a,b) => {
+    return b.length - a.length;
+  })
+
+
   // input is like this: [[3,1], [0,1], [2,1]]
   var arr = []
 
@@ -67,18 +72,51 @@ function square_with_fewest_onward_moves(inp) {
     }
   })
   // return the square with the fewest onward  moves
+  // implement rule to check if square visited.
+
   return shortest
 }
+
+// initial start for the knight (could be anywhere)
+var xpos = 4
+var ypos = 4
+
+var posArr = []
+var rand = [4, 6]
+var rand2 = [3, 4]
+var step = 10
 
 function draw() {
   drawBoard();
 
 
+  if (step > 0) {
+    var next = square_with_fewest_onward_moves(allPossibleMoves([xpos, ypos]))
+    stroke(255)
+    // implement a rule for next, so that each square can only be visited once.
+
+    // if square_with_fewest_onward_moves() returns a square which has already been visited,
+    // it should return a different square
+    line(xpos, ypos, next[0], next[1])
+    xpos = next[0]
+    ypos = next[1]
+
+    console.log(xpos, ypos)
+
+    squares[two_one(xpos, ypos)].visited = true
+    //knight.move(xpos, ypos)
+
+
+  //  console.log("From xpos, ypos " + xpos + "  " + ypos + " " )
+  //  console.log(next)
+  }
+
+knight.move(xpos, ypos)
   squares.forEach((el) => {
     el.write()
   })
 
-
+  step = step - 1;
 }
 
 // input is this format: [x, y]
@@ -101,22 +139,26 @@ function allPossibleMoves(pos) {
 
     if (x >= 0 && y >= 0 && x < 8 && y < 8) {
       // if knight already visited, don't count that particular field
-      let index = -1
+      let isvisited = false
       squares.forEach((el) => {
         if (el.p == x && el.q == y) {
-        //  console.log(el.p + " " + el.q + " " + el.i)
-        if (el.visited == false) {
-          index = el.i
-        }
+          //  console.log(el.p + " " + el.q + " " + el.i)
+          if (el.visited == true) {
+            isvisited == true
+          } else {
+            isvisited == false
+          }
         }
       })
       // check here with x and y
       // this is not finished
+      if (isvisited == false) {
+        let arr = []
+        arr.push(x)
+        arr.push(y)
+        possible_fields.push(arr)
+      }
 
-      let arr = []
-      arr.push(x)
-      arr.push(y)
-      possible_fields.push(arr)
     }
   }
   return possible_fields
@@ -168,6 +210,7 @@ function map_to_8(pos) {
   arr.push(y)
   return arr
 }
+
 
 // Function just for drawing the board
 function drawBoard() {
