@@ -44,7 +44,9 @@ function setup() {
 
 function square_with_fewest_onward_moves(inp) {
 
-if (inp.length == 0) console.log("allPossibleMoves returned empty array" + " " +  "last point xpos ypos = " + xpos + " " + ypos)
+  if (inp.length == 0) {
+    console.log("allPossibleMoves returned empty array" + " " + "last point xpos ypos = " + xpos + " " + ypos)
+  }
 
   function sort_array(a, b) {
     return b.length - a.length;
@@ -55,18 +57,23 @@ if (inp.length == 0) console.log("allPossibleMoves returned empty array" + " " +
   var arr = []
 
   inp.forEach((element) => {
-    // for each of the available fields, test all possible moves in each of those fields
+
+    // for each of the available fields => test all possible moves
 
     var b = allPossibleMoves(element)
-    var a = []
     a = [...element, ...b]
+
+    var a = []
     arr.push(a)
-    // push into a readable structure:
-    // it's crucial to understand the structure.  (console.log(arr))
-    // Index 0 and 1 represent the field. all the other elements in the array (array of arrays) are the connections from that field
+    // arr[0] and arr[1] are the actual coordintes we are testing
+    console.log(a)
+    //  push into a readable structure:
+    //  it's crucial to understand the structure.  (console.log(arr))
+    //  Index 0 and 1 represent the field of element in loop.
+    all the other elements represent the possible fields to goto
   })
   // now we have saved all possible moves in arr
-  // arr[0] and arr[1] are the actual coordintes we are testing
+
   // all other elements are the moves to consider, as sub arrays
   var shortest = arr[0]
   arr.forEach((el) => {
@@ -104,7 +111,7 @@ function draw() {
 
     var next = square_with_fewest_onward_moves(allPossibleMoves([xpos, ypos]))
 
-    draw_line(zurückgelegter_weg)  // funktioniert noch nicht gut
+    draw_line(zurückgelegter_weg) // funktioniert noch nicht gut
     xpos = next[0]
     ypos = next[1]
 
