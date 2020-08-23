@@ -9,7 +9,6 @@ function Knight() {
   this.y;
   frameRate(15)
   this.move = function(_x, _y) {
-
     //keeps track of itself
     this.x = map(_x, 0, 7, 0, 350)
     this.y = map(_y, 0, 7, 0, 350)
@@ -70,7 +69,7 @@ function square_with_fewest_onward_moves(inp) {
     //  push into a readable structure:
     //  it's crucial to understand the structure.  (console.log(arr))
     //  Index 0 and 1 represent the field of element in loop.
-    all the other elements represent the possible fields to goto
+    // all the other elements represent the possible fields to goto
   })
   // now we have saved all possible moves in arr
 
@@ -111,9 +110,11 @@ function draw() {
 
     var next = square_with_fewest_onward_moves(allPossibleMoves([xpos, ypos]))
 
+
     draw_line(zurückgelegter_weg) // funktioniert noch nicht gut
     xpos = next[0]
     ypos = next[1]
+
 
 
     squares[two_one(xpos, ypos)].visited = true
@@ -133,7 +134,7 @@ function draw() {
 
 // input is this format: [x, y]
 function allPossibleMoves(pos) {
-
+ // returns an array
   // check all available moves from a given position
 
   var p = pos[0]
