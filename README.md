@@ -3,6 +3,7 @@
 
 [Knight's tour](https://en.wikipedia.org/wiki/Knight%27s_tour) is a sequence of moves on a chessboard.
  The knight should touch each of the 64 squares once and only once.This is my attempt at solving that problem.
+As a nice side-effect of solving the tour, the pattern which emerges from the tour is itself an artwork.
 
 
 ## Simple Heuristic: Warndorff's Rule
