@@ -7,4 +7,4 @@ This is my attempt at solving that problem. The knight should touch each of the 
 
 There are multiple approaches for a solution in this case, including brute force. The wikipedia article offers multiple ideas. What I tried to do is Warnsdorff's rule. (*"Warnsdorff's rule is a heuristic for finding a single knight's tour."*)
 
-[image](https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Thomasson_symmetric_closed_knights_tour.svg/220px-Thomasson_symmetric_closed_knights_tour.svg.png)
+![image](https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Thomasson_symmetric_closed_knights_tour.svg/220px-Thomasson_symmetric_closed_knights_tour.svg.png)
