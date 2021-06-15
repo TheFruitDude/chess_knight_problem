@@ -65,7 +65,7 @@ function square_with_fewest_onward_moves(inp) {
     var a = []
     arr.push(a)
     // arr[0] and arr[1] are the actual coordintes we are testing
-    console.log(a)
+    // console.log(a)
     //  push into a readable structure:
     //  it's crucial to understand the structure.  (console.log(arr))
     //  Index 0 and 1 represent the field of element in loop.
@@ -89,7 +89,7 @@ function square_with_fewest_onward_moves(inp) {
 }
 
 // initial start for the knight (could be anywhere)
-var xpos = 4
+var xpos = 2  
 var ypos = 3
 var step = 63
 var zurückgelegter_weg = []
@@ -99,9 +99,6 @@ function draw() {
   zarr.push(xpos)
   zarr.push(ypos)
 
-
-
-
   zurückgelegter_weg.push(zarr)
 
   drawBoard();
@@ -109,7 +106,7 @@ function draw() {
   if (step >= 0) {
 
     var next = square_with_fewest_onward_moves(allPossibleMoves([xpos, ypos]))
-
+    console.log(next);
 
     draw_line(zurückgelegter_weg) // funktioniert noch nicht gut
     xpos = next[0]
@@ -117,8 +114,8 @@ function draw() {
 
 
 
-    squares[two_one(xpos, ypos)].visited = true
-    squares[two_one(xpos, ypos)].highlight()
+     squares[two_one(xpos, ypos)].visited = true
+     squares[two_one(xpos, ypos)].highlight()
   }
 
   knight.move(xpos, ypos)
@@ -128,8 +125,8 @@ function draw() {
   })
 
   step = step - 1;
-  console.log(zurückgelegter_weg)
-  console.log("length = " + zurückgelegter_weg.length)
+ // console.log(zurückgelegter_weg)
+  // console.log("length = " + zurückgelegter_weg.length)
 }
 
 // input is this format: [x, y]
@@ -209,7 +206,7 @@ function two_one(posX, posY) {
 
   posX++ // add one because zero-based index
   posY++
-  return ((posY - 1) * 8 + (posX)) - 1
+  return (((posY - 1) * 8 + (posX)) - 1)
 
 }
 // translates from coordinates to 0-7 (returns array)
