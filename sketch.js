@@ -1,4 +1,15 @@
 p5.disableFriendlyErrors = true; // disables FES, could imrove performance
+
+/*
+  Important notes: -We have to calculate Sequence before making the animation.
+  What to do when both choices are equal length?
+
+
+  What if it gets stuck in the corner??? That's why I have to look before jumping there
+
+*/
+
+
 var squares = [];
 var visited = []
 var img;
@@ -41,9 +52,9 @@ function setup() {
   // console.log(all)
 }
 
-function square_with_fewest_onward_moves(inp) {
+function square_with_fewest_onward_moves(possibleMoves) {
 
-  if (inp.length == 0) {
+  if (possibleMoves.length == 0) {
     console.log("allPossibleMoves returned empty array" + " " + "last point xpos ypos = " + xpos + " " + ypos)
   }
 
@@ -52,28 +63,35 @@ function square_with_fewest_onward_moves(inp) {
   }
 
 
-  // input is like this: [[3,1], [0,1], [2,1]]
+  // possibleMovesut is like this: [[3,1], [0,1], [2,1]]
   var arr = []
 
-  inp.forEach((element) => {
+  possibleMoves.forEach((element) => {
+    // console.log("element" , element)
+    // for each of the available fields => test all possible moves which spring from that field
 
-    // for each of the available fields => test all possible moves
+    let candidates = allPossibleMoves(element)
+   // console.log(`the possible candidate moves of candidate ${element} are ${candidates}`)
+    a = [...element, ...candidates]
 
-    var b = allPossibleMoves(element)
-    a = [...element, ...b]
-
-    var a = []
+    // var a = []
     arr.push(a)
+
     // arr[0] and arr[1] are the actual coordintes we are testing
-    // console.log(a)
+     // console.log(a)
+
     //  push into a readable structure:
     //  it's crucial to understand the structure.  (console.log(arr))
-    //  Index 0 and 1 represent the field of element in loop.
-    // all the other elements represent the possible fields to goto
-  })
-  // now we have saved all possible moves in arr
+    //  Index 0 and 1 represent the field of element in loop. 
+    // all other elements are the moves to consider, as SubArrays
 
-  // all other elements are the moves to consider, as sub arrays
+   
+  })
+
+  // now: all possible moves stored in arr
+
+   console.log(arr)
+  
   var shortest = arr[0]
   arr.forEach((el) => {
     if (arr.indexOf(el) !== 0 && arr.indexOf(el) !== 1) {
@@ -88,9 +106,10 @@ function square_with_fewest_onward_moves(inp) {
   return shortest
 }
 
-// initial start for the knight (could be anywhere)
-var xpos = 2  
-var ypos = 3
+
+var xpos = 0   // initial start for the knight (could be anywhere)
+var ypos = 0   // 0-based
+
 var step = 63
 var zurückgelegter_weg = []
 
@@ -104,17 +123,19 @@ function draw() {
   drawBoard();
 
   if (step >= 0) {
+    
+    //console.log(allPossibleMoves([xpos, ypos]));
 
     var next = square_with_fewest_onward_moves(allPossibleMoves([xpos, ypos]))
-    console.log(next);
 
-    draw_line(zurückgelegter_weg) // funktioniert noch nicht gut
+    // console.log(next)
+    
+
+    draw_line(zurückgelegter_weg) // works in dubvious ways
     xpos = next[0]
     ypos = next[1]
 
-
-
-     squares[two_one(xpos, ypos)].visited = true
+     squares[two_one(xpos, ypos)].visited = true 
      squares[two_one(xpos, ypos)].highlight()
   }
 
@@ -129,7 +150,7 @@ function draw() {
   // console.log("length = " + zurückgelegter_weg.length)
 }
 
-// input is this format: [x, y]
+// possibleMovesut is this format: [x, y]
 function allPossibleMoves(pos) {
  // returns an array
   // check all available moves from a given position
@@ -172,15 +193,15 @@ function allPossibleMoves(pos) {
 }
 
 
-function draw_line(inp) {
-  // inp is like this: [[3,5], [5,3], [1,3]]
+function draw_line(possibleMoves) {
+  // possibleMoves is like this: [[3,5], [5,3], [1,3]]
   let x1, x2, y1, y2
-  for (let i = 0; i < inp.length - 1; i++) {
-    x1 = map(inp[i][0], 0, 7, 0, 350)
-    y1 = map(inp[i][1], 0, 7, 0, 350)
+  for (let i = 0; i < possibleMoves.length - 1; i++) {
+    x1 = map(possibleMoves[i][0], 0, 7, 0, 350)
+    y1 = map(possibleMoves[i][1], 0, 7, 0, 350)
 
-    x2 = map(inp[i + 1][0], 0, 7, 0, 350)
-    y2 = map(inp[i + 1][1], 0, 7, 0, 350)
+    x2 = map(possibleMoves[i + 1][0], 0, 7, 0, 350)
+    y2 = map(possibleMoves[i + 1][1], 0, 7, 0, 350)
 
   }
 
@@ -200,6 +221,7 @@ function one_two(i) {
   arr.push(x, y)
   return arr
 }
+
 // returns a zero based number
 function two_one(posX, posY) {
   // translates Array grid from 2d to 1d
@@ -209,6 +231,7 @@ function two_one(posX, posY) {
   return (((posY - 1) * 8 + (posX)) - 1)
 
 }
+
 // translates from coordinates to 0-7 (returns array)
 function map_to_8(pos) {
 
