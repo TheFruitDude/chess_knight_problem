@@ -60,6 +60,7 @@ function setup() {
 
 
   // load the object
+  /*
   moves = []
   for (i = 0; i < 8; i++) {
     arr = []
@@ -73,7 +74,7 @@ function setup() {
   print(JSON.stringify(moves))
   print(moves)
 
-
+*/
 
 }
 
@@ -159,16 +160,14 @@ function draw() {
 
 
 
-  let zarr = []
-  zarr.push(xpos)
-  zarr.push(ypos)
-
-  zurückgelegter_weg.push(zarr)
+  zurückgelegter_weg.push(xpos, ypos)
 
   drawBoard();
+  /*
   squares.forEach((el) => {
     el.write()
   })
+  */
 
   if (step >= 0) {
 
@@ -182,6 +181,7 @@ function draw() {
 
 
     draw_line(zurückgelegter_weg) // works in dubvious ways
+    print(zurückgelegter_weg)
     xpos = next[0]
     ypos = next[1]
 
