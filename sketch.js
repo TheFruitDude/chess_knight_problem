@@ -1,17 +1,8 @@
 p5.disableFriendlyErrors = true; // disables FES, could imrove performance
 
 /*
-  Important notes: 
+
   -We have to calculate Sequence before making the animation.
-  What to do when both choices are equal length?
-
-
-  What if it gets stuck in the corner?
-  I have found the error. It is, in fact, a fatal design-flaw. It should not choose the fields with fewest onward moves, 
-  instead, the fewest visited onward moves.
-
-
-
 
 */
 
@@ -21,24 +12,12 @@ var visited = []
 var img;
 var knight;
 
-var moves; // arrays are generally faster than object literals in javascript
+var moves; // hardcoced all moves from each q
 
-function Knight() {
-  this.x;
-  this.y;
-  frameRate(15)
-  this.move = function (_x, _y) {
-    //keeps track of itself
-    this.x = map(_x, 0, 7, 0, 350)
-    this.y = map(_y, 0, 7, 0, 350)
-    image(img, this.x, this.y)
-  }
-}
+
 
 function preload() {
   img = loadImage('ross_neu.png')
-
-
 }
 
 
@@ -50,37 +29,15 @@ function setup() {
   for (y = 0; y < height; y += 50) {
     for (x = 0; x < width; x += 50) {
       square = new Square(x, y, index);
-      square.setvariables() // initialize the coordinates
+      square.initialize() // initialize the coordinates
       squares.push(square);
       index++;
     }
   }
   knight = new Knight()
 
-
-
-  // load the object
-  /*
-  moves = []
-  for (i = 0; i < 8; i++) {
-    arr = []
-    for (j = 0; j < 8; j++) {
-
-      arr.push(refactoredAllPossibleMoves([i, j]))
-    }
-    moves.push(arr)
-  }
-
-  print(JSON.stringify(moves))
-  print(moves)
-
-*/
-
+  try_to_find_path()
 }
-
-
-
-
 
 function square_with_fewest_onward_moves(possibleMoves) {
 
@@ -97,28 +54,9 @@ function square_with_fewest_onward_moves(possibleMoves) {
   var arr = []
 
   possibleMoves.forEach((element) => {
-    // console.log("element" , element)
-    // for each of the available fields => test all possible moves which spring from that field
-
     let candidates = allPossibleMoves(element)
-    let test = moves[element[0]][element[1]]
 
-    /*
-    print(candidates)
-    print(test)
-    print("----------------------")
-    */
-
-    //print(JSON.stringify(candidates) === JSON.stringify(test))
-
-
-    //throw new Error("Stop script");
-
-
-    // console.log(`the possible candidate moves of candidate ${element} are ${candidates}`)
     a = [...element, ...candidates]
-
-    // var a = []
     arr.push(a)
     /*
         arr[0] and arr[1] are the actual coordintes we are testing
@@ -131,23 +69,47 @@ function square_with_fewest_onward_moves(possibleMoves) {
 
   })
 
-  // now: all possible moves stored in arr
-
-
-
   var shortest = arr[0]
+  
+
   arr.forEach((el) => {
+     //console.log(`possible consideration for field ${el[0]} | ${el[1]} is [${el}]`)
     if (arr.indexOf(el) !== 0 && arr.indexOf(el) !== 1) {
+
       if (el.length < shortest.length) {
         shortest = el
+        // this is deterministic, will always yield the same value
       }
     }
   })
-  // return the square with the fewest onward  moves
-  // implement rule to check if square visited.
 
+
+let alternatives = []
+
+  arr.forEach((el) => {
+    if (arr.indexOf(el) !== 0 && arr.indexOf(el) !== 1) {
+
+      if (el.length == shortest.length && el !== shortest) {
+        alternatives.push(el)
+      }
+    }
+  })
+
+
+if (alternatives.length > 0 ) {
+   
+   randomNUmber = getRandomBetween(0, alternatives.length-1)
+   
+   console.log(`randomly choosing ${alternatives[randomNUmber]  } as the continuation`)
+   return alternatives[randomNUmber]  
+} 
+console.log(`choosing ${shortest} as the continuation`)
   return shortest
 }
+
+function getRandomBetween(min, max) {
+   return Math.random() * (max - min) + min;
+ }
 
 
 var xpos = 0   // initial start for the knight (could be anywhere)
@@ -160,7 +122,7 @@ function draw() {
 
 
 
-  zurückgelegter_weg.push(xpos, ypos)
+  
 
   drawBoard();
   /*
@@ -171,33 +133,76 @@ function draw() {
 
   if (step >= 0) {
 
-    // console.log(allPossibleMoves([xpos, ypos]));
+    
+    squares[two_one(xpos, ypos)].visited = true
+    squares[two_one(xpos, ypos)].highlight()
+    zurückgelegter_weg.push([xpos, ypos])
 
     var next = square_with_fewest_onward_moves(allPossibleMoves([xpos, ypos]))
-    if (next == undefined) {
-      return
-    }
+    if (next !== undefined) {
+      
+    
     // console.log(next)
 
-
-    draw_line(zurückgelegter_weg) // works in dubvious ways
-    print(zurückgelegter_weg)
     xpos = next[0]
     ypos = next[1]
 
-    squares[two_one(xpos, ypos)].visited = true
-    squares[two_one(xpos, ypos)].highlight()
+   console.log(`visiting ${xpos} | ${ypos}`);
+   knight.move(xpos, ypos)
+   step = step - 1;
+
+    } else {
+       console.log(`Did not find path. Exiting with ${step} remaining.`)
+       throw new Error();
+    }
   }
+  squares.forEach((el) => {
+   if (el.visited) {
+      el.highlight()
+   }
+ })
 
-  knight.move(xpos, ypos)
-
-
-
-  step = step - 1;
-  // console.log(zurückgelegter_weg)
-  // console.log("length = " + zurückgelegter_weg.length)
 }
 
+function try_to_find_path() {
+   xpos = 0;
+   ypos = 0;
+for (i = 0; i< 3 i++) {
+   step = 63
+   while (step >= 0) {
+
+    
+      squares[two_one(xpos, ypos)].visited = true
+      squares[two_one(xpos, ypos)].highlight()
+      zurückgelegter_weg.push([xpos, ypos])
+  
+      var next = square_with_fewest_onward_moves(allPossibleMoves([xpos, ypos]))
+      if (next !== undefined) {
+  
+      xpos = next[0]
+      ypos = next[1]
+  
+     console.log(`visiting ${xpos} | ${ypos}`);
+     knight.move(xpos, ypos)
+     step = step - 1;
+  
+      } else {
+         console.log(`Did not find path. Exiting with ${step} remaining. continue at iteration ${i+1}`)
+         step = -2;
+      }
+    }
+    if (step == -1 ) {
+       print("success")
+    } 
+  
+  }
+}
+  
+
+
+
+
+// this function ignores allPosssiblefields
 function refactoredAllPossibleMoves(position) {
 
   m = 8
@@ -235,17 +240,14 @@ function refactoredAllPossibleMoves(position) {
 
 // input is this format: [x, y]
 function allPossibleMoves(pos) {
-  // returns an array
-  // check all available moves from a given position
 
   var p = pos[0]
   var q = pos[1]
 
   var possible_fields = []
-  // all possible moves of the knight
+
   const X = [2, 1, -1, -2, -2, -1, 1, 2]
   const Y = [1, 2, 2, 1, -1, -2, -2, -1]
-  //  console.log("searching for all possible moves in " + pos[0] + " | " + pos[1])
 
   for (let j = 0; j < 8; j++) {
     // testing all moves:

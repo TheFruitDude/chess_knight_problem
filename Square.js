@@ -1,7 +1,7 @@
 function Square(_x, _y, _i) {
   this.x = _x;
   this.y = _y;
-  this.i = _i;
+  this.index = _i;
 
 // q and p are simply x and y, but mapped from range 0 to 9
   this.p; // for example [0, 1]
@@ -10,7 +10,6 @@ function Square(_x, _y, _i) {
   this.visited = false;
 
   this.highlight = function() {
-
     push();
     strokeWeight(5);
     stroke(255, 255, 0);
@@ -18,19 +17,19 @@ function Square(_x, _y, _i) {
     rect(this.x, this.y, 50, 50);
     pop();
   }
+
   this.index = function() {
-    // it's position (index)
-    // not necessary, could just use arr.indexOf(el)
-    return this.i
+    return this.index
   }
-this.setvariables = function() {
+
+this.initialize = function() {
   function one_two(i) {
 
     let x = i % 8
 
     let y = Math.floor(i / 8)
 
-    let arr = []
+    let   arr = []
     arr.push(x, y)
     return arr
   }
