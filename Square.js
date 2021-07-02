@@ -3,13 +3,13 @@ function Square(_x, _y, _i) {
   this.y = _y;
   this.i = _i;
 
-// q and p are simply x and y, but mapped from range 0 to 9
+  // q and p are simply x and y, but mapped from range 0 to 9
   this.p; // for example [0, 1]
   this.q;
 
   this.visited = false;
 
-  this.highlight = function() {
+  this.highlight = function () {
     if (this.visited) {
       push();
       strokeWeight(5);
@@ -21,31 +21,31 @@ function Square(_x, _y, _i) {
 
   }
 
-  this.index = function() {
+  this.index = function () {
     return this.index
   }
 
-this.initialize = function() {
-  function one_two(i) {
+  this.initialize = function () {
+    function one_two(i) {
 
-    let x = i % 8
+      let x = i % 8
 
-    let y = Math.floor(i / 8)
+      let y = Math.floor(i / 8)
 
-    let   arr = []
-    arr.push(x, y)
-    return arr
+      let arr = []
+      arr.push(x, y)
+      return arr
+    }
+    let arr = []
+
+
+    arr = one_two(this.i)
+
+    this.p = arr[0]
+    this.q = arr[1]
+
   }
-  let arr = []
-
-
-  arr = one_two(this.i)
-
-  this.p = arr[0]
-  this.q = arr[1]
-
-}
-  this.write = function() {
+  this.write = function () {
     // simply writes the cell number in his field
     textSize(16)
     fill('red')
@@ -70,6 +70,14 @@ this.initialize = function() {
       arr.push(x)
       arr.push(y)
       return arr
+    }
+  }
+
+  this.clicked = function () {
+    var d = dist(mouseX, mouseY, this.x + 25, this.y + 25)
+    print(d)
+    if (d < 30  ) {
+      this.highlight();
     }
   }
 }
