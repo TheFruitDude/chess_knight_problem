@@ -10,4 +10,4 @@ As a nice side-effect of solving the tour, the pattern which emerges from the to
 There are multiple approaches for a solution in this case, including brute force. The wikipedia article offers multiple ideas. I find this quite interesting. What I tried to do is Warnsdorff's rule. (*"Warnsdorff's rule is a heuristic for finding a single knight's tour."*)
 
 
-![image](https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Thomasson_symmetric_closed_knights_tour.svg/220px-Thomasson_symmetric_closed_knights_tour.svg.png)
+![gif](demo.gif)

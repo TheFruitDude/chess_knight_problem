@@ -22,6 +22,8 @@ function preload() {
 
 function setup() {
 
+   frameRate(1)
+
    createCanvas(400, 400);
    // Create the squares
    var index = 0;
@@ -120,15 +122,16 @@ var zurückgelegter_weg = []
 function draw() {
 
 
-
+  
 
 
    drawBoard();
    
+   /*
    squares.forEach((el) => {
      el.write()
    })
-   
+   */
 
    if (step >= 0) {
 
